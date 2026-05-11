@@ -16,20 +16,14 @@ void handle_sigusr1(int sig) {
 }
 
 int main() {
-    // write pid
-    int fd = open(".monitor_pid",
-        O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
+    int fd = open(".monitor_pid", O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd < 0) {
         perror("open");
         exit(1);
     }
 
-    char buf[32];
-    int n = snprintf(buf, sizeof(buf),
-        "%d\n", getpid());
-
-    write(fd, buf, n);
+    dprintf(fd, "%d\n", getpid());
     close(fd);
 
     struct sigaction sa1 = {0}, sa2 = {0};
